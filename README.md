@@ -6,15 +6,24 @@ The web app for the Nocknock outreach engine: leads, approvals, sending, replies
 Browser --> Vercel (this repo) --/api/n8n--> https://<your server> (Caddy + n8n)
 ```
 
-## Deploy
+## Deploy (about 5 minutes)
 
-1. **Backend first.** Set up the engine from the backend kit and note its address and the `vercel` password printed by `scripts/make-env.sh`.
-2. **Import this repo into Vercel.** vercel.com -> Add New -> Project -> pick this repo. Framework "Vite" is detected from `vercel.json`; leave the build settings alone.
-3. **Environment variables.** Add everything in `.env.example` (Production). Make your login with `node scripts/hash-password.mjs me "Your Name" you@example.com` and put the printed JSON inside `AUTH_USERS=[ ... ]`.
-4. **Deploy**, open the URL, sign in with the ID and password you hashed.
+1. **Backend first.** Run the installer from the backend kit. It prints the 5 settings below and saves them in `vercel-settings.env` on your server.
+2. **Import this repo into Vercel:** vercel.com -> Add New -> Project -> pick this repo. Vercel detects the settings from `vercel.json`; leave the build settings alone.
+3. **Paste the 5 settings** before pressing Deploy (Environment Variables; you can paste the whole block from `vercel-settings.env` into the first field and Vercel splits it):
+
+   | Name | Value |
+   |---|---|
+   | `N8N_BASE_URL` | your server address, `https://...` |
+   | `N8N_PROXY_USER` | `vercel` |
+   | `N8N_PROXY_PASSWORD` | printed by the installer |
+   | `SESSION_SECRET` | printed by the installer |
+   | `AUTH_USERS` | printed by the installer (your web-app login) |
+
+4. **Deploy**, open the URL and sign in with the ID and password the installer printed.
 5. Open **Send centre** and send yourself a test email before approving any lead.
 
-Change a variable -> Vercel redeploys on the next push, or press Redeploy.
+To add a second person later, run `node scripts/hash-password.mjs sam "Sam Lee" sam@example.com`. It prints one more entry to add inside the brackets of `AUTH_USERS`.
 
 ## Local development
 
@@ -30,3 +39,4 @@ npm run dev
 - Vercel's free Hobby plan is for personal, non-commercial use. Check Vercel's terms if this becomes a business.
 - The screen you land on is `public/cockpit.html`; the React screens are in `src` (add `?ui=react`).
 - `public/cockpit.html` still contains the original author's sample email copy in its "copy drafts" panel. It is display only: what is actually sent comes from your backend `profile.json`.
+- Optional extras (Google sign-in, Team / AI keys / Lead sources pages) are listed at the bottom of `.env.example`. You do not need them.
