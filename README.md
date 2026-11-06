@@ -38,5 +38,4 @@ npm run dev
 
 - Vercel's free Hobby plan is for personal, non-commercial use. Check Vercel's terms if this becomes a business.
 - The screen you land on is `public/cockpit.html`; the React screens are in `src` (add `?ui=react`).
-- `public/cockpit.html` still contains the original author's sample email copy in its "copy drafts" panel. It is display only: what is actually sent comes from your backend `profile.json`.
 - Optional extras (Google sign-in, Team / AI keys / Lead sources pages) are listed at the bottom of `.env.example`. You do not need them.
