@@ -98,7 +98,7 @@ export async function createOrganization(db: Db, p: {
       [org.id, owner.id, JSON.stringify({ name: p.name, seat_limit: org.seat_limit })])
     return { org, owner }
   }).catch((e) => {
-    if (e?.code === '23514') throw new TenancyError('invalid', 'seat limit must be between 1 and 10')
+    if (e?.code === '23514') throw new TenancyError('invalid', 'seat limit must be between 1 and 20')
     throw e
   })
 }

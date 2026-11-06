@@ -1,7 +1,9 @@
-import { STATE_COOKIE, cookie, newState, origin } from '../_lib/session.js'
+import { STATE_COOKIE, cookie, failRedirect, newState, origin } from '../_lib/session.js'
+import { captchaGate } from '../_lib/turnstile.js'
 
 // Step 1: send the browser to Google's consent screen.
 export function GET(request: Request): Response {
+  if (!captchaGate(request)) return failRedirect(request, 'captcha', false)
   const clientId = process.env.GOOGLE_CLIENT_ID
   if (!clientId) return new Response('GOOGLE_CLIENT_ID is not configured', { status: 500 })
 

@@ -7,6 +7,7 @@ import { AuthGate, useAuth } from './lib/auth'
 import { ToastProvider } from './components/ui'
 import Classic from './pages/Classic'
 import Team from './pages/Team'
+import OnboardingGate from './onboarding/Gate'
 import { AiKeys, LeadSources } from './pages/Integrations'
 import './styles.css'
 
@@ -34,7 +35,9 @@ createRoot(document.getElementById('root')!).render(
     <HashRouter>
       <ToastProvider>
         <AuthGate>
-          <Root />
+          <OnboardingGate>
+            <Root />
+          </OnboardingGate>
         </AuthGate>
       </ToastProvider>
     </HashRouter>

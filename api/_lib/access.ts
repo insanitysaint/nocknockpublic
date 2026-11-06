@@ -1,6 +1,7 @@
+import { clearUnverifiedPassword } from './accounts.js'
 import { getDb } from './db.js'
 import { allowed, type Session } from './session.js'
-import { acceptInvites, orgsOf } from './tenancy.js'
+import { acceptInvites, ensureWorkspace, orgsOf } from './tenancy.js'
 
 // Operators are you and anyone you set up by hand (ALLOWED_EMAILS, or a password login). They see the cockpit and your
 // engine data. Customers who only hold a seat in some other company get the company pages, never your leads.
@@ -36,6 +37,8 @@ export async function engineAccess(s: Pick<Session, 'email' | 'provider'>): Prom
   }
 }
 
+export const signupOpen = () => process.env.SIGNUP === 'open'
+
 // Decides whether a verified identity may sign in. Pending invites are turned into memberships on the way.
 export async function admit(email: string, name: string): Promise<boolean> {
   const operator = allowed(email)
@@ -43,6 +46,10 @@ export async function admit(email: string, name: string): Promise<boolean> {
   if (!db) return operator
   try {
     const { user } = await acceptInvites(db, { email, name })
+    // Open sign-up (SIGNUP=open, with the robot check on): anyone with a verified email gets a workspace of their own.
+    // A verified email replaces any password someone set up for this address without proving they own it.
+    await clearUnverifiedPassword(db, email)
+    if (signupOpen()) await ensureWorkspace(db, { email, name })
     return operator || (await orgsOf(db, user.id)).length > 0
   } catch (e) {
     console.error('admit failed', e)

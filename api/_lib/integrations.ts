@@ -55,7 +55,9 @@ export async function removeKey(db: Db, scope: Scope, provider: Provider): Promi
     [scope.orgId, scope.userId, JSON.stringify({ provider })])
 }
 
-async function getKey(db: Db, scope: Scope, provider: Provider): Promise<string> {
+export const currentFetch = () => doFetch
+
+export async function getKey(db: Db, scope: Scope, provider: Provider): Promise<string> {
   check(scope, 'use_integrations')
   const r = await db.query<{ secret: string }>(`select secret from integrations where org_id = $1 and provider = $2`, [scope.orgId, provider])
   if (!r.rows.length) throw new TenancyError('not_found', `Add your ${provider} key first`)

@@ -74,7 +74,7 @@ export function origin(request: Request): string {
   return `https://${host}`
 }
 
-export type Provider = 'google' | 'zoho' | 'password'
+export type Provider = 'google' | 'zoho' | 'password' | 'local'
 
 export interface LoginUser {
   email: string

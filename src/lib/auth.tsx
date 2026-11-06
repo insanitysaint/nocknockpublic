@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react'
-import Login from '../pages/Login'
+import Wizard from '../onboarding/Wizard'
 
 export interface User {
   email: string
@@ -39,7 +39,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
   }, [])
 
   if (user === undefined) return <div className="login-wrap" aria-busy="true" />
-  if (user === null) return <Login onSignedIn={load} />
+  if (user === null) return <Wizard signedIn={false} onSignedIn={load} onFinish={load} />
   return <Ctx.Provider value={{ user, signOut }}>{children}</Ctx.Provider>
 }
 
